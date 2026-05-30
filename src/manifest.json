@@ -49,7 +49,6 @@
   "quickapp": {},
 
   "mp-weixin": {
-    
     "libVersion": "latest",
     "setting": {
       "urlCheck": false
