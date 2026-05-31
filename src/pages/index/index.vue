@@ -1,10 +1,22 @@
 <template>
-  <view class="index" :style="{ paddingTop: safeAreaInsets.top + 10 + 'px' }">
+  <view class="index">
+    <!-- 装饰云朵（毛玻璃效果） -->
+    <view class="cloud-deco cloud-1"></view>
+    <view class="cloud-deco cloud-2"></view>
+    <view class="cloud-deco cloud-3"></view>
+    <view class="cloud-deco cloud-4"></view>
+
     <!-- 顶部用户栏 -->
     <view class="header">
       <view class="user-info">
-        <image class="avatar" src="/static/icon/avatar.svg" mode="aspectFill" />
-        <text class="user-name">小云</text>
+        <!-- 自动获取用户头像 -->
+        <image
+          class="avatar"
+          :src="userStore.userInfo?.avatar || '/static/icon/avatar.svg'"
+          mode="aspectFill"
+        />
+        <!-- 自动获取用户昵称 -->
+        <text class="user-name">{{ userStore.userInfo?.nickName || '微信用户' }}</text>
       </view>
     </view>
 
@@ -46,7 +58,7 @@
     <!-- 日程卡片 -->
     <view class="schedule-card">
       <view class="card-header">
-        <image src="/static/icon/schedule.svg" mode="aspectFill" class="header-icon" />
+        <text class="header-icon">📅</text>
         <text class="header-title">{{ selectedDateTitle }}日程</text>
         <view style="flex: 1"></view>
         <view class="add-btn" @click="goAddPage">+ 新增</view>
@@ -61,7 +73,7 @@
           <view class="schedule-item">
             <view class="item-left">
               <view class="time">
-                <image src="/static/icon/clock.svg" mode="aspectFill" class="time-icon" />
+                <text class="time-icon">⏰</text>
                 <text>{{ item.scheduleTime ? item.scheduleTime.substring(0, 5) : '全天' }}</text>
               </view>
               <text class="title">{{ item.title }}</text>
@@ -73,7 +85,7 @@
 
       <!-- 空状态 -->
       <view v-if="todaySchedules.length === 0" class="empty-schedule">
-        <text>暂无日程，点击右上角新增～</text>
+        <text>✨ 暂无日程，点击右下角麦克风语音添加</text>
       </view>
     </view>
 
@@ -100,8 +112,9 @@ import { ref, onMounted, computed } from 'vue'
 import { getScheduleByDate, deleteScheduleApi, getScheduleByMonth } from '@/service/calendar.js'
 import AddSchedulePopup from '@/components/AddSchedulePopup.vue'
 import AiChatModal from '@/components/AiChatModal.vue'
+import { useUserStore } from '@/stores/user'
 
-const { safeAreaInsets } = uni.getSystemInfoSync()
+const userStore = useUserStore()
 
 const weeks = ['日', '一', '二', '三', '四', '五', '六']
 const currentYear = ref(new Date().getFullYear())
@@ -276,6 +289,10 @@ const openVoiceModal = () => {
 }
 
 onMounted(() => {
+  const token = uni.getStorageSync('token')
+  if (!token || !userStore.userInfo.userId) {
+    uni.reLaunch({ url: '/pages/login/login' })
+  }
   renderCalendar()
   loadMonthEventDates()
   const today = new Date()
@@ -291,267 +308,274 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 page {
-  background-color: #e0f0ff;
+  background: #2b3345;
   height: 100%;
-  overflow: hidden;
-}
-.index {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 0 30rpx;
-  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
 }
 
-.header {
+.index {
+  width: 100%;
+  min-height: 100vh;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #87ceeb 0%, #b8d8f0 40%, #d4e8f5 100%);
+}
+
+/* 云朵装饰（和参考图一致） */
+.cloud-deco {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.cloud-1 {
+  top: 60px;
+  left: -20px;
+  width: 140px;
+  height: 90px;
   background: rgba(255, 255, 255, 0.7);
-  border-radius: 50rpx;
-  padding: 20rpx 30rpx;
-  margin-bottom: 20rpx;
+  border-radius: 100px;
+  filter: blur(20px);
+}
+.cloud-2 {
+  top: 200px;
+  right: -15px;
+  width: 120px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 80px;
+  filter: blur(18px);
+}
+.cloud-3 {
+  bottom: 180px;
+  left: -10px;
+  width: 100px;
+  height: 65px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 65px;
+  filter: blur(15px);
+}
+.cloud-4 {
+  bottom: 350px;
+  right: 20px;
+  width: 90px;
+  height: 55px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 55px;
+  filter: blur(16px);
+}
+
+/* 顶部用户栏 */
+.header {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 50px 20px 10px;
+  position: relative;
+  z-index: 2;
+
   .user-info {
     display: flex;
     align-items: center;
-    gap: 16rpx;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px 16px 8px 12px;
+    border-radius: 40px;
+    width: fit-content;
+
     .avatar {
-      width: 80rpx;
-      height: 80rpx;
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #5ca0d0, #3a7eb0);
       border-radius: 50%;
-      background: #cce5ff;
     }
+
     .user-name {
-      font-size: 32rpx;
-      font-weight: bold;
-      color: #333;
+      font-size: 15px;
+      font-weight: 600;
+      color: #2a5a7a;
     }
   }
 }
 
+/* 日历卡片 */
 .calendar-card {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 32rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  border-radius: 32px;
+  margin: 16px 20px 12px;
+  padding: 20px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  position: relative;
+  z-index: 2;
+
   .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30rpx;
+    margin-bottom: 20px;
+
     .arrow-btn {
-      width: 60rpx;
-      height: 60rpx;
-      background: #f0f7ff;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.7);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+
       image {
-        width: 30rpx;
-        height: 30rpx;
+        width: 16px;
+        height: 16px;
       }
     }
+
     .title {
-      font-size: 36rpx;
-      font-weight: bold;
-      color: #333;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2a6a8a;
     }
   }
+
   .week-header {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20rpx;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 12px;
+
     .week-item {
-      font-size: 28rpx;
-      color: #666;
-      width: 10%;
-      text-align: center;
+      font-size: 13px;
+      color: #2a6a8a;
+      font-weight: 600;
+      padding: 8px 0;
     }
   }
+
   .days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 10rpx;
+    gap: 6px;
+
     .day-item {
       aspect-ratio: 1;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 28rpx;
-      border-radius: 50%;
-      position: relative;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.4);
+      font-size: 15px;
+      color: #2a5a7a;
+      font-weight: 500;
+
       &.other-month {
-        color: #ccc;
+        opacity: 0.4;
       }
       &.active {
-        background: #409eff;
+        background: rgba(74, 154, 200, 0.8);
         color: #fff;
       }
       &.has-event::after {
         content: '';
-        position: absolute;
-        bottom: 8rpx;
-        width: 8rpx;
-        height: 8rpx;
-        background: #409eff;
+        width: 5px;
+        height: 5px;
+        background: #3a8aba;
         border-radius: 50%;
+        margin-top: 3px;
       }
     }
   }
 }
 
+/* 日程卡片 */
 .schedule-card {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 32rpx;
-  padding: 30rpx;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  border-radius: 32px;
+  margin: 0 20px;
+  padding: 20px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  position: relative;
+  z-index: 2;
   flex: 1;
-  overflow-y: auto;
-  margin-top: 20rpx;
 
   .card-header {
-    display: flex;
-    align-items: center;
-    gap: 12rpx;
-    margin-bottom: 20rpx;
-    .header-icon {
-      width: 40rpx;
-      height: 40rpx;
-    }
+    margin-bottom: 16px;
     .header-title {
-      font-size: 32rpx;
-      font-weight: bold;
-      color: #333;
+      font-weight: 700;
+      color: #2a6a8a;
+      font-size: 16px;
     }
     .add-btn {
-      background: #409eff;
-      color: #fff;
-      font-size: 26rpx;
-      padding: 8rpx 20rpx;
-      border-radius: 30rpx;
+      background: none;
+      color: #4a9ac8;
+      font-size: 14px;
+      font-weight: 600;
     }
   }
 
   .schedule-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: #fff;
-    border-radius: 16rpx;
-    padding: 24rpx;
-    margin-bottom: 16rpx;
-    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(200, 220, 235, 0.6);
+    background: none;
+    border-radius: 0;
 
-    .item-left {
-      flex: 1;
-      .time {
-        display: flex;
-        align-items: center;
-        gap: 8rpx;
-        margin-bottom: 8rpx;
-        .time-icon {
-          width: 32rpx;
-          height: 32rpx;
-        }
-        text {
-          font-size: 26rpx;
-          color: #666;
-        }
-      }
-      .title {
-        display: block;
-        font-size: 30rpx;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 8rpx;
-      }
-      .desc {
-        display: block;
-        font-size: 26rpx;
-        color: #999;
-      }
+    .time {
+      font-size: 12px;
+      color: #2a7a9a;
+      font-weight: 500;
+    }
+    .title {
+      font-size: 15px;
+      color: #3a5a6a;
+      font-weight: 600;
+    }
+    .desc {
+      font-size: 11px;
+      color: #5a8aaa;
     }
   }
 
   .empty-schedule {
     text-align: center;
-    padding: 60rpx 0;
-    color: #999;
-    font-size: 28rpx;
+    padding: 32px;
+    color: #2a6a8a;
+    font-size: 13px;
   }
 }
 
-.schedule-list {
-  .schedule-item-wrapper {
-    overflow: hidden;
-    position: relative;
-
-    .schedule-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20rpx 0;
-      border-bottom: 1rpx solid #eee;
-      background: rgba(255, 255, 255, 0);
-      transition: transform 0.2s ease;
-      position: relative;
-      z-index: 2;
-
-      .item-left {
-        flex: 1;
-        .time {
-          display: flex;
-          align-items: center;
-          gap: 8rpx;
-          margin-bottom: 8rpx;
-          .time-icon {
-            width: 32rpx;
-            height: 32rpx;
-          }
-          text {
-            font-size: 26rpx;
-            color: #666;
-          }
-        }
-        .title {
-          display: block;
-          font-size: 30rpx;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 8rpx;
-        }
-        .desc {
-          display: block;
-          font-size: 26rpx;
-          color: #999;
-        }
-      }
-    }
-  }
-
-  .empty-schedule {
-    text-align: center;
-    padding: 60rpx 0;
-    color: #999;
-    font-size: 28rpx;
-  }
-}
-
+/* 语音按钮 */
 .mic-btn {
   position: fixed;
-  right: 40rpx;
-  bottom: 140rpx;
-  width: 120rpx;
-  height: 120rpx;
-  background: #409eff;
+  bottom: 90px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #6eb8e0, #4a9ac8);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 16rpx rgba(64, 158, 255, 0.3);
+  box-shadow:
+    0 6px 16px rgba(60, 120, 160, 0.3),
+    0 0 20px rgba(110, 184, 224, 0.6);
+  z-index: 200;
+
   image {
-    width: 60rpx;
-    height: 60rpx;
+    width: 26px;
+    height: 26px;
+  }
+  &:active {
+    transform: scale(0.94);
   }
 }
 </style>

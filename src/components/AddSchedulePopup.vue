@@ -2,7 +2,7 @@
   <view class="popup-mask" v-if="visible" @click="close">
     <view class="popup-container" @click.stop>
       <view class="popup-header">
-        <text class="title">新增日程</text>
+        <text class="title">📅 新增日程</text>
         <view class="close-btn" @click="close">✕</view>
       </view>
 
@@ -191,112 +191,157 @@ const close = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8rpx);
   display: flex;
   align-items: flex-end;
   z-index: 1000;
 }
 
 .popup-container {
-  background: #fff;
-  border-radius: 32rpx 32rpx 0 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20rpx);
+  border-radius: 48rpx 48rpx 0 0;
   width: 100%;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
+  border-top: 2rpx solid rgba(255, 255, 255, 0.6);
 }
 
 .popup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx;
-  border-bottom: 1rpx solid #eee;
+  padding: 32rpx 40rpx;
+  border-bottom: 2rpx solid rgba(200, 220, 235, 0.4);
+
   .title {
     font-size: 36rpx;
-    font-weight: bold;
-    color: #333;
+    font-weight: 700;
+    color: #2a6a8a;
   }
+
   .close-btn {
-    width: 50rpx;
-    height: 50rpx;
+    width: 56rpx;
+    height: 56rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40rpx;
-    color: #999;
+    font-size: 44rpx;
+    color: #4a8aaa;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+
+    &:active {
+      background: rgba(255, 255, 255, 0.8);
+    }
   }
 }
 
 .popup-content {
   flex: 1;
-  padding: 30rpx;
+  padding: 40rpx;
   overflow-y: auto;
 }
 
 .form-item {
-  margin-bottom: 30rpx;
+  margin-bottom: 32rpx;
+
   .label {
     font-size: 28rpx;
-    color: #333;
+    font-weight: 600;
+    color: #2a5a7a;
     margin-bottom: 12rpx;
     display: block;
+
     .required {
-      color: #ff4444;
+      color: #e86464;
     }
   }
+
   .input {
-    border: 1rpx solid #e0e0e0;
-    border-radius: 16rpx;
-    padding: 20rpx;
+    border: 2rpx solid rgba(200, 220, 235, 0.6);
+    border-radius: 24rpx;
+    padding: 24rpx;
     font-size: 28rpx;
-    background: #f8f8f8;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2a5a7a;
+
+    &::placeholder {
+      color: #8ab4c8;
+    }
   }
+
   .picker-input {
-    border: 1rpx solid #e0e0e0;
-    border-radius: 16rpx;
-    padding: 20rpx;
+    border: 2rpx solid rgba(200, 220, 235, 0.6);
+    border-radius: 24rpx;
+    padding: 24rpx;
     font-size: 28rpx;
-    background: #f8f8f8;
+    background: rgba(255, 255, 255, 0.9);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #2a5a7a;
+
     .placeholder {
-      color: #999;
+      color: #8ab4c8;
     }
+
     .picker-icon {
-      font-size: 32rpx;
+      font-size: 36rpx;
     }
   }
+
   .textarea {
-    border: 1rpx solid #e0e0e0;
-    border-radius: 16rpx;
-    padding: 20rpx;
+    border: 2rpx solid rgba(200, 220, 235, 0.6);
+    border-radius: 24rpx;
+    padding: 24rpx;
     font-size: 28rpx;
-    background: #f8f8f8;
-    min-height: 150rpx;
+    background: rgba(255, 255, 255, 0.9);
+    min-height: 160rpx;
+    color: #2a5a7a;
+
+    &::placeholder {
+      color: #8ab4c8;
+    }
   }
 }
 
 .popup-footer {
   display: flex;
-  padding: 20rpx 30rpx 40rpx;
-  gap: 20rpx;
+  padding: 20rpx 40rpx 48rpx;
+  gap: 24rpx;
+
   .btn {
     flex: 1;
-    height: 88rpx;
+    height: 96rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 44rpx;
+    border-radius: 100rpx;
     font-size: 32rpx;
+    font-weight: 600;
+
     &.cancel {
-      background: #f5f5f5;
-      color: #666;
+      background: rgba(255, 255, 255, 0.8);
+      color: #4a8aaa;
+      border: 2rpx solid rgba(200, 220, 235, 0.6);
+
+      &:active {
+        background: rgba(255, 255, 255, 0.95);
+      }
     }
+
     &.confirm {
-      background: #409eff;
+      background: linear-gradient(135deg, #5ca0d0, #4a9ac8);
       color: #fff;
+      box-shadow: 0 8rpx 20rpx rgba(74, 154, 200, 0.3);
+
+      &:active {
+        opacity: 0.9;
+        transform: scale(0.98);
+      }
     }
   }
 }

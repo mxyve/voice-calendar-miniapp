@@ -37,15 +37,16 @@
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#87ceeb",
+    "backgroundColor": "#87ceeb"
   },
   // 设置 TabBar
   "tabBar": {
-    "color": "#333",
-    "selectedColor": "#1296db",
-    "backgroundColor": "#fff",
+    "color": "#2a6a8a",
+    "selectedColor": "#4a9ac8",
+    "backgroundColor": "rgba(255, 255, 255, 0.45)",
     "borderStyle": "white",
+    "blurEffect": "light", // 开启高斯模糊
     "list": [
       {
         "text": "首页",

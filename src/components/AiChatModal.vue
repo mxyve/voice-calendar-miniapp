@@ -11,10 +11,10 @@
       <scroll-view class="chat-scroll" scroll-y :scroll-top="scrollTop">
         <view class="chat-list">
           <view
-            class="chat-item"
-            :class="[item.role === 'user' ? 'user' : 'ai']"
             v-for="(item, idx) in messages"
             :key="idx"
+            class="chat-item"
+            :class="item.role === 'user' ? 'user' : 'ai'"
           >
             <!-- 用户消息 -->
             <view class="bubble user" v-if="item.role === 'user'">
@@ -269,7 +269,7 @@ watch(
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -277,84 +277,86 @@ watch(
 }
 
 .modal-box {
-  width: 90%;
-  height: 80vh;
-  background: #fff;
-  border-radius: 24rpx;
+  width: 92%;
+  height: 82vh;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 .modal-header {
-  padding: 24rpx;
-  background: #409eff;
-  color: #fff;
+  padding: 28rpx 32rpx;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1rpx solid rgba(200, 220, 235, 0.4);
+  color: #2a6a8a;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
 
   .title {
-    font-size: 32rpx;
-    font-weight: bold;
+    font-size: 34rpx;
+    font-weight: 700;
   }
 
   .close-btn {
-    font-size: 40rpx;
-    line-height: 1;
-    padding: 0 16rpx;
+    font-size: 42rpx;
+    color: #2a6a8a;
+    font-weight: bold;
   }
 }
 
 .chat-scroll {
   flex: 1;
   height: 0;
-  padding: 20rpx;
-  background: #f5f5f5;
+  padding: 24rpx;
+  background: transparent;
   box-sizing: border-box;
 }
 
 .chat-list {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  gap: 24rpx;
 }
 
 .chat-item {
-  max-width: 75%;
   display: flex;
+  width: 100%; // 关键：确保占满整行
 
   &.user {
     justify-content: flex-end;
   }
-
   &.ai {
     justify-content: flex-start;
   }
 }
 
 .bubble {
-  padding: 20rpx 24rpx;
-  border-radius: 16rpx;
+  padding: 22rpx 28rpx;
+  border-radius: 20rpx;
   font-size: 28rpx;
   line-height: 1.5;
-  position: relative;
   word-break: break-all;
   white-space: pre-wrap;
   max-width: 100%;
 
   &.user {
-    background: #409eff;
+    background: linear-gradient(135deg, #5ca0d0, #4a9ac8);
     color: #fff;
-    border-radius: 16rpx 16rpx 4rpx 16rpx;
+    border-radius: 20rpx 20rpx 6rpx 20rpx;
   }
 
   &.ai {
-    background: #fff;
-    color: #333;
-    border: 1rpx solid #eee;
-    border-radius: 16rpx 16rpx 16rpx 4rpx;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2a5a7a;
+    border: 1rpx solid rgba(200, 220, 235, 0.5);
+    border-radius: 20rpx 20rpx 20rpx 6rpx;
   }
 }
 
@@ -363,53 +365,58 @@ watch(
 }
 
 .voice-btn {
-  background: #409eff;
+  background: linear-gradient(135deg, #5ca0d0, #4a9ac8);
   color: #fff;
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-  font-size: 22rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 24rpx;
   display: inline-block;
 }
 
 .loading {
   text-align: center;
-  color: #999;
-  padding: 20rpx;
-  font-size: 24rpx;
+  color: #4a8aaa;
+  padding: 24rpx;
+  font-size: 26rpx;
 }
 
 .input-bar {
   display: flex;
   align-items: center;
-  padding: 20rpx;
-  gap: 16rpx;
-  border-top: 1rpx solid #eee;
-  background: #fff;
+  padding: 24rpx;
+  gap: 20rpx;
+  border-top: 1rpx solid rgba(200, 220, 235, 0.4);
+  background: rgba(255, 255, 255, 0.7);
   flex-shrink: 0;
 
   .input {
     flex: 1;
-    height: 70rpx;
-    background: #f5f5f5;
-    border-radius: 35rpx;
-    padding: 0 24rpx;
+    height: 72rpx;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 36rpx;
+    padding: 0 28rpx;
     font-size: 28rpx;
+    color: #2a5a7a;
+    border: 1rpx solid rgba(200, 220, 235, 0.4);
   }
 
   .voice-input {
-    padding: 16rpx 24rpx;
-    background: #eee;
-    border-radius: 30rpx;
+    padding: 18rpx 28rpx;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 36rpx;
     font-size: 24rpx;
+    color: #2a6a8a;
+    border: 1rpx solid rgba(200, 220, 235, 0.4);
     white-space: nowrap;
   }
 
   .send-btn {
-    background: #409eff;
+    background: linear-gradient(135deg, #5ca0d0, #4a9ac8);
     color: #fff;
-    padding: 16rpx 24rpx;
-    border-radius: 30rpx;
+    padding: 18rpx 28rpx;
+    border-radius: 36rpx;
     font-size: 24rpx;
+    font-weight: 500;
     white-space: nowrap;
   }
 }
