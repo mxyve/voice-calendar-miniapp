@@ -1,6 +1,6 @@
 import { useUserStore } from '@/stores/user'
 // 这里也可以根据实际情况修改成线上接口地址
-const baseURL = 'http://localhost:8080/voice-calendar-app-api/'
+const baseURL = 'http://192.168.0.101:8080/voice-calendar-app-api/'
 
 export const http = (options) => {
   // 1. 返回 Promise 对象

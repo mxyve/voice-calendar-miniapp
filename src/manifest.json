@@ -53,7 +53,10 @@
     "setting": {
       "urlCheck": false
     },
-    "usingComponents": true
+    "usingComponents": true,
+    "backgroundFetch": {
+      "minimumInterval": 86400
+    }
   },
   "mp-alipay": {
     "usingComponents": true

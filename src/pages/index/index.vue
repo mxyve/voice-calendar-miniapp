@@ -90,12 +90,16 @@
     @close="showAddPopup = false"
     @success="onAddSuccess"
   />
+
+  <!-- 语音弹窗 -->
+  <AiChatModal :visible="showAiModal" @close="showAiModal = false" />
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { getScheduleByDate, deleteScheduleApi, getScheduleByMonth } from '@/service/calendar.js'
 import AddSchedulePopup from '@/components/AddSchedulePopup.vue'
+import AiChatModal from '@/components/AiChatModal.vue'
 
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -107,6 +111,7 @@ const todaySchedules = ref([])
 const selectedDate = ref('')
 const eventDates = ref(new Set())
 const showAddPopup = ref(false)
+const showAiModal = ref(false)
 
 // 计算属性：将 selectedDate 转换为显示格式
 const selectedDateTitle = computed(() => {
@@ -267,7 +272,7 @@ const onAddSuccess = () => {
 
 // 语音
 const openVoiceModal = () => {
-  uni.showToast({ title: '语音功能开发中', icon: 'none' })
+  showAiModal.value = true
 }
 
 onMounted(() => {
